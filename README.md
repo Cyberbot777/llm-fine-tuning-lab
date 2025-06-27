@@ -2,6 +2,10 @@
 
 This project is a personal sandbox for learning how to load, generate, and fine-tune language models using HuggingFace Transformers and PyTorch.
 
+**Status:** Fine-tuning completed on a small oracle-style dataset using DistilGPT2.
+
+---
+
 ## Getting Started
 
 ### 1. Activate the virtual environment:
@@ -17,21 +21,18 @@ fine_tune_playground.ipynb
 ### 3. Select the correct kernel:
 Choose the Python environment associated with your `.venv` or named `llm-finetune-env`.
 
-### 4. Run the following cell to load the model and generate text:
+### 4. Run the following cell to load the base model and generate text:
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from IPython.display import Markdown, display
 import textwrap
 
-# Load model and tokenizer
 model_name = "distilgpt2"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Set up generator
 generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-# Generate text
 output = generator(
     "Once upon a time,",
     max_new_tokens=60,
@@ -40,10 +41,24 @@ output = generator(
     temperature=0.9
 )
 
-# Display output
-print("\nGenerated Output:\n")
 display(Markdown(output[0]["generated_text"]))
 ```
+
+---
+
+## Fine-Tuning the Model
+
+This project includes training a DistilGPT2 model on a short oracle-style prompt dataset.
+
+### Steps to fine-tune:
+1. Load your `.txt` dataset using HuggingFace `datasets`
+2. Tokenize the dataset with GPT2 tokenizer
+3. Train using `Trainer` with causal language modeling config
+4. Save the model checkpoint to `./oracle-gpt2/`
+
+**Note:** This folder is `.gitignore`d to keep the repo light.
+
+---
 
 ## Generation Parameters
 
@@ -66,6 +81,11 @@ generator(prompt, max_new_tokens=60, do_sample=True, top_k=50, temperature=0.9)
 generator(prompt, max_new_tokens=100, do_sample=True, top_k=100, temperature=1.2)
 ```
 
+---
+
 ## Next Steps
 
-Fine-tuning instructions will be added soon as this lab expands.
+- Test the fine-tuned model output
+- Compare pre-finetune vs. post-finetune generations
+- Train on larger or more structured datasets
+- Upload to HuggingFace Hub (optional)

@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.pt
+*.bin
+
+
+oracle-gpt2/
